@@ -4,6 +4,7 @@ using HotelListing.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HotelListing.API.Migrations
 {
     [DbContext(typeof(HotelListingDbContext))]
-    partial class HotelListingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220720221446_AddedDefaultRoles")]
+    partial class AddedDefaultRoles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -132,13 +134,13 @@ namespace HotelListing.API.Migrations
                         },
                         new
                         {
-                            Id = 6,
+                            Id = 5,
                             Name = "Netherlands",
                             ShortName = "NL"
                         },
                         new
                         {
-                            Id = 7,
+                            Id = 4,
                             Name = "Canada",
                             ShortName = "CA"
                         });
@@ -226,15 +228,15 @@ namespace HotelListing.API.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "c854decd-4d44-47dc-b3dc-0b881d936533",
-                            ConcurrencyStamp = "a8a80a8f-c4d7-4ff5-88b6-c417838990d9",
+                            Id = "08eb4958-6725-43d4-ab20-99ad1b8598dd",
+                            ConcurrencyStamp = "ddf3a245-785f-486f-bc70-884b4bc59920",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
-                            Id = "24627b97-3d26-4d01-af9b-5c3651d43de5",
-                            ConcurrencyStamp = "3fe85351-60d9-4316-a9a6-99ff367aa646",
+                            Id = "4e17e4a9-86dd-4357-afcb-90b4f6f9ffbf",
+                            ConcurrencyStamp = "18510f1d-bd57-4dc9-84a1-f10b87f53694",
                             Name = "User",
                             NormalizedName = "USER"
                         });
