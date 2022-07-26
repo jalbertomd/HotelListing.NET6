@@ -1,5 +1,5 @@
-﻿using HotelListing.API.Contracts;
-using HotelListing.API.Models.Users;
+﻿using HotelListing.API.Core.Contracts;
+using HotelListing.API.Core.Models.Users;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,10 +10,12 @@ namespace HotelListing.API.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IAuthManager _authManager;
+        private readonly ILogger<AccountController> _logger;
 
-        public AccountController(IAuthManager authManager)
+        public AccountController(IAuthManager authManager, ILogger<AccountController> logger)
         {
             this._authManager = authManager;
+            this._logger = logger;
         }
 
         // POST: api/Account/register
@@ -24,6 +26,11 @@ namespace HotelListing.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult> Register([FromBody] ApiUserDto apiUserDto)
         {
+            var location = GetControllerActionNames();
+            _logger.LogInformation($"Registration Attempt for {apiUserDto.Email}");
+
+            //try
+            //{
             var errors = await _authManager.Register(apiUserDto);
 
             if (errors.Any())
@@ -36,6 +43,11 @@ namespace HotelListing.API.Controllers
             }
 
             return Ok();
+            //}
+            //catch (Exception ex)
+            //{
+            //    return InternalError($"{location}: Error", ex);
+            //}            
         }
 
         // POST: api/Account/login
@@ -46,6 +58,12 @@ namespace HotelListing.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult> Login([FromBody] LoginDto loginDto)
         {
+            var location = GetControllerActionNames();
+
+            _logger.LogInformation($"Login Attempt for {loginDto.Email} ");
+
+            //try
+            //{
             var authResponse = await _authManager.Login(loginDto);
 
             if (authResponse == null)
@@ -54,6 +72,11 @@ namespace HotelListing.API.Controllers
             }
 
             return Ok(authResponse);
+            //}
+            //catch (Exception ex)
+            //{
+            //    return InternalError($"{location}: Error", ex);
+            //}            
         }
 
         // POST: api/Account/refreshtoken
@@ -72,6 +95,28 @@ namespace HotelListing.API.Controllers
             }
 
             return Ok(authResponse);
+        }
+
+        private ObjectResult InternalError(string message, Exception ex = null)
+        {
+            if (ex != null)
+            {
+                _logger.LogError(ex, message);
+                return Problem(ex.Message, statusCode: 500);
+            }
+            else
+            {
+                _logger.LogError(message);
+                return Problem(message, statusCode: 500);
+            }
+        }
+
+        private string GetControllerActionNames()
+        {
+            var controller = ControllerContext.ActionDescriptor.ControllerName;
+            var action = ControllerContext.ActionDescriptor.ActionName;
+
+            return $"{controller} - {action}";
         }
     }
 }
